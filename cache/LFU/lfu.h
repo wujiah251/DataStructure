@@ -57,6 +57,7 @@ public:
     }
     bool get(Key k, Value &res);
     void put(Key k, Value v);
+    int length() { return size; }
 
 private:
     void erase(head_node *cur_head);
@@ -92,7 +93,6 @@ void LFUCache<Key, Value>::insert(LFUCache<Key, Value>::head_node *cur_head, LFU
         cur->next->prev = cur;
     }
     cur_head->cur = cur;
-    size++;
 }
 
 template <class Key, class Value>
@@ -165,10 +165,11 @@ void LFUCache<Key, Value>::put(Key k, Value v)
             cur_head = new head_node(1);
             cur_head->next = head->next;
             cur_head->prev = head;
-            cur->head->prev = cur_head;
+            cur_head->next->prev = cur_head;
             head->next = cur_head;
         }
         insert(cur_head, cur);
+        size++;
     }
     else
     {
