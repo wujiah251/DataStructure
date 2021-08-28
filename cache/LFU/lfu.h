@@ -3,6 +3,9 @@
 
 #include <unordered_map>
 #include <limits.h>
+#include <iostream>
+using std::cout;
+using std::endl;
 using std::unordered_map;
 
 template <class Key, class Value>
@@ -149,7 +152,7 @@ void LFUCache<Key, Value>::put(Key k, Value v)
     auto item = map.find(k);
     if (item == map.end())
     {
-        if (size >= capacity)
+        while (size >= capacity)
         {
             erase(head->next);
         }

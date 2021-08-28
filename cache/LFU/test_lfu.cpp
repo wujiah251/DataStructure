@@ -10,25 +10,9 @@ int main()
     cache.put(3, 3);
     cache.put(4, 4);
     int v;
-    if (cache.get(1, v))
-    {
-        cout << v << endl;
-    }
-    if (cache.get(2, v))
-    {
-        cout << v << endl;
-    }
-    if (cache.get(3, v))
-    {
-        cout << v << endl;
-    }
-    if (cache.get(4, v))
-    {
-        cout << v << endl;
-    }
     cache.get(1, v);
-    cache.get(1, v);
-    cache.get(1, v);
+    cache.get(2, v);
+    cache.get(3, v);
     cache.put(5, 5);
     if (cache.get(1, v))
     {
@@ -43,6 +27,10 @@ int main()
         cout << v << endl;
     }
     if (cache.get(4, v))
+    {
+        cout << v << endl;
+    }
+    if (cache.get(5, v))
     {
         cout << v << endl;
     }
