@@ -10,7 +10,7 @@ using std::vector;
 template <typename Key, typename Value,
           typename ZoneHash,
           typename Hash = std::hash<Key>>
-class SharedHashMap
+class SharedHashMap : public Map<Key, Value>
 {
 private:
     typedef HashMap<Key, Value, Hash> hashmap;
@@ -24,14 +24,14 @@ private:
     }
 
 public:
-    SharedHashMap(int zones, double load_factor)
+    SharedHashMap(int zones, double load_factor = 0.75)
     {
         zones_ = 4;
         while (zones_ < zones && zones_ * 2 < INT_MAX)
         {
             zones_ *= 2;
         }
-        shared_maps_ = vector<hashmap>(zones_, load_factor);
+        shared_maps_ = vector<hashmap>(zones_);
     }
     ~SharedHashMap() {}
     void put(const Key &key, const Value &val);
@@ -53,7 +53,7 @@ template <typename Key, typename Value,
           typename Hash>
 bool SharedHashMap<Key, Value, ZoneHash, Hash>::get(const Key &key, Value &res)
 {
-    return shared_maps_[get_zone(key)].put(key, res);
+    return shared_maps_[get_zone(key)].get(key, res);
 }
 
 template <typename Key, typename Value,

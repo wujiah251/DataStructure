@@ -5,26 +5,14 @@
 #include <vector>
 #include <mutex>
 #include <limits.h>
+#include "map.h"
 using std::lock_guard;
 using std::mutex;
 using std::vector;
 
-template <class Key, class Value>
-class Map
-{
-public:
-    Map();
-    virtual ~Map() = 0;
-    virtual void put(const Key &key, const Value &val) = 0;
-    virtual bool get(const Key &key, Value &res) = 0;
-    virtual void remove(const Key &key) = 0;
-    virtual size_t size() = 0;
-};
-
 template <typename Key, typename Value,
           typename Hash = std::hash<Key>>
-class HashMap : public HashMap<Key, Value>
-// 互斥锁实现
+class HashMap : public Map<Key, Value>
 {
 private:
     struct node
@@ -75,7 +63,7 @@ void HashMap<Key, Value, Hash>::resize()
     {
         new_size *= 2;
     }
-    if (new_size <= buckets_)
+    if (new_size <= buckets_.size())
         return;
     vector<node *> new_buckets(new_size, nullptr);
     for (int i = 0; i < buckets_.size(); ++i)
@@ -129,6 +117,7 @@ void HashMap<Key, Value, Hash>::put(const Key &key, const Value &val)
     buckets_[index] = cur;
     resize();
 }
+
 template <typename Key, typename Value, typename Hash>
 bool HashMap<Key, Value, Hash>::get(const Key &key, Value &res)
 {
@@ -147,6 +136,7 @@ bool HashMap<Key, Value, Hash>::get(const Key &key, Value &res)
     }
     return false;
 }
+
 template <typename Key, typename Value, typename Hash>
 void HashMap<Key, Value, Hash>::remove(const Key &key)
 {
@@ -173,6 +163,7 @@ void HashMap<Key, Value, Hash>::remove(const Key &key)
         pre = pre->next;
     }
 }
+
 template <typename Key, typename Value, typename Hash>
 size_t HashMap<Key, Value, Hash>::size()
 {
