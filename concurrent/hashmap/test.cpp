@@ -5,6 +5,7 @@
 #include <thread>
 #include <vector>
 #include <ctime>
+#include <unordered_map>
 using namespace std;
 
 struct zone_hash
@@ -86,5 +87,6 @@ int main()
     Test t2(10, 10, 100000, 100000, 1, &map2, 0, 500);
     double res2 = t2.Run();
     cout << res2 << endl;
+    unordered_map<int, int> map;
     return 0;
 }

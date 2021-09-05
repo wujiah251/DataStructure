@@ -47,6 +47,7 @@ HashMap<Key, Value, Hash>::HashMap(double load_facotr)
     : load_factor_(load_facotr), size_(0), buckets_(4, nullptr)
 {
 }
+
 template <typename Key, typename Value, typename Hash>
 HashMap<Key, Value, Hash>::~HashMap()
 {
