@@ -1,5 +1,5 @@
 add_executable(TESTLRU test_lru.cpp)
 
 install(TARGETS TESTLRU
-    DESTINATION "bin/"
+    DESTINATION "test/"
 )

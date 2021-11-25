@@ -1,11 +1,11 @@
-add_executable(ObjPoolTest obj_pool_test.cpp)
+add_executable(TestObjPool obj_pool_test.cpp)
 
-target_include_directories(ObjPoolTest PUBLIC
+target_include_directories(TestObjPool PUBLIC
                           "${PROJECT_BINARY_DIR}"
                           "${PROJECT_SOURCE_DIR}/pool"
                           )
 
 
-install(TARGETS ObjPoolTest
-    DESTINATION "bin/"
+install(TARGETS TestObjPool
+    DESTINATION "test/"
 )

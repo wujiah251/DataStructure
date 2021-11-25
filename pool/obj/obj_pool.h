@@ -11,12 +11,10 @@ public:
     ObjPool(size_t N)
         : size_(N), head_(0), free_(N), data_(new node[N])
     {
-        for (int i = 0; i < N - 1; ++i)
+        for (int i = 0; i < size_; ++i)
         {
             data_[i].next_ = i + 1;
         }
-        // next point to self means tail
-        data_[N - 1].next_ = N - 1;
     }
     virtual ~ObjPool()
     {
@@ -24,7 +22,7 @@ public:
     }
     T *alloc()
     {
-        if (free_ <= 0)
+        if (free_ <= 0 || head_ >= size_)
         {
             return nullptr;
         }
@@ -36,26 +34,27 @@ public:
     template <typename... Params>
     T *alloc(Params &&...params)
     {
-        if (free_ <= 0)
+        if (free_ <= 0 || head_ >= size_)
         {
             return nullptr;
         }
         --free_;
-        T *res = data_[head_];
-        head_ = data_[head_].next;
+        T *res = reinterpret_cast<T *>(&(data_[head_]));
+        head_ = data_[head_].next_;
         return new (res) T(std::forward<Params>(params)...);
     }
-    void release(T *obj)
+    bool release(T *obj)
     {
         if ((node *)obj - data_ >= size_)
         {
-            return;
+            return false;
         }
-        node *cur = static_cast<node *>(obj);
-        cur->next = head_;
+        obj->~T();
+        node *cur = reinterpret_cast<node *>(obj);
+        cur->next_ = head_;
         head_ = cur - data_;
         ++free_;
-        return;
+        return true;
     }
 
 private:
@@ -67,8 +66,8 @@ private:
     };
     size_t size_;
     size_t free_;
-    size_t head_;
     node *data_;
+    size_t head_;
 };
 
 #endif
