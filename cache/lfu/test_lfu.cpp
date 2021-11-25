@@ -1,5 +1,5 @@
-#include "lfu.h"
 #include <iostream>
+#include "lfu.h"
 using namespace std;
 
 int main()

@@ -63,6 +63,7 @@ private:
     {
         T obj_;
         size_t next_;
+        node() {}
     };
     size_t size_;
     size_t free_;
