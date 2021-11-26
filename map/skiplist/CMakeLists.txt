@@ -1,5 +1,5 @@
-# add_executable(TESTLRU test_lru.cpp)
+add_executable(TestSkipList test_skiplist.cpp)
 
-# install(TARGETS TESTLRU
-#     DESTINATION "bin/"
-# )
+install(TARGETS TestSkipList
+    DESTINATION "test/"
+)

@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-pg")
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/build)
+set(CMAKE_BUILD_TYPE "Debug")
 
 
 add_subdirectory(cache)

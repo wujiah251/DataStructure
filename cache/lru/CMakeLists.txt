@@ -1,5 +1,5 @@
-add_executable(TESTLRU test_lru.cpp)
+add_executable(TestLru test_lru.cpp)
 
-install(TARGETS TESTLRU
+install(TARGETS TestLru
     DESTINATION "test/"
 )

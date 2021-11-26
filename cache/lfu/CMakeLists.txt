@@ -1,5 +1,5 @@
-add_executable(TestLFU test_lfu.cpp)
+add_executable(TestLfu test_lfu.cpp)
 
-install(TARGETS TestLFU
+install(TARGETS TestLfu
     DESTINATION "test/"
 )
