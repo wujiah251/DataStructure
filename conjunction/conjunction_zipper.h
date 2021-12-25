@@ -5,7 +5,7 @@
 
 // 拉链法
 template <class T, class Comp = std::less<T>>
-class ConjunctionZipper : public Conjunction<T, Comp>
+class ConjunctionZipper : public Conjunction<T>
 {
 public:
     ConjunctionZipper() {}
@@ -32,13 +32,13 @@ bool ConjunctionZipper<T, Comp>::intersection(std::vector<std::vector<T>> &multi
     while (index1 < multi_set[0].size() && index2 < multi_set[1].size())
     {
 
-        if (!_comp(set1[index1], set2[index2]) && !_comp(set2[index1], set2[index2]))
+        if (set1[index1] == set2[index2])
         {
             // ==
             res.push_back(set1[index1++]);
             ++index2;
         }
-        else if (_comp(set1[index1], set2[index2]))
+        else if (set1[index1] < set2[index2])
         {
             ++index1;
         }

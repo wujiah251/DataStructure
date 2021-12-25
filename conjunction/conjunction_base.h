@@ -4,14 +4,15 @@
 #include <vector>
 #include <functional>
 
-template<class T,class Comp = std::less<T>>
+template <class T>
 class Conjunction
 {
-    public:
-        Conjunction(){}
-        virtual ~Conjunction(){}
-        virtual bool intersection(std::vector<std::vector<T>>& multi_list, std::vector<T>& res) = 0;
-    private:
+public:
+    Conjunction() {}
+    virtual ~Conjunction() {}
+    virtual bool intersection(std::vector<std::vector<T>> &multi_list, std::vector<T> &res) = 0;
+
+private:
 };
 
 #endif

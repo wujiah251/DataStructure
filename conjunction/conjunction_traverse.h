@@ -5,20 +5,17 @@
 #include <limits.h>
 #include "conjunction_base.h"
 
-template <class T, class Comp = std::less<T>>
-class ConjunctionTraverse : public Conjunction<T, Comp>
+template <class T>
+class ConjunctionTraverse : public Conjunction<T>
 {
 public:
     ConjunctionTraverse() {}
     ~ConjunctionTraverse() override {}
     bool intersection(std::vector<std::vector<T>> &multi_list, std::vector<T> &res) override;
-
-private:
-    Comp _comp;
 };
 
-template <class T, class Comp>
-bool ConjunctionTraverse<T, Comp>::intersection(std::vector<std::vector<T>> &multi_set, std::vector<T> &res)
+template <class T>
+bool ConjunctionTraverse<T>::intersection(std::vector<std::vector<T>> &multi_set, std::vector<T> &res)
 {
     if (multi_set.size() < 1)
         return false;
@@ -47,7 +44,7 @@ bool ConjunctionTraverse<T, Comp>::intersection(std::vector<std::vector<T>> &mul
             bool flag = false;
             for (int k = 0; k < multi_set[j].size(); ++k)
             {
-                if (!_comp(multi_set[j][k], multi_set[0][i]) && !_comp(multi_set[0][i], multi_set[j][k]))
+                if (multi_set[j][k] == multi_set[0][i])
                 {
                     flag = true;
                     break;
