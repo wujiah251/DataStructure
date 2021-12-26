@@ -35,7 +35,7 @@ bool ConjunctionSkip<T>::intersection(std::vector<std::vector<T>> &multi_set, st
         }
     }
     multi_set[index].swap(multi_set[0]);
-    std::vector<typename std::vector<T>::const_iterator> itor_vec(N);
+    std::vector<typename std::vector<T>::iterator> itor_vec(N);
     for (int j = 1; j < N; ++j)
         itor_vec[j] = multi_set[j].begin();
     res.clear();

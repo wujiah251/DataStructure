@@ -6,9 +6,19 @@ project(DataStruct)
 # C++标准
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-pg")
+#set(CMAKE_CXX_FLAGS "-pg")
+set(CMAKE_CXX_FLAGS "-lpthread")
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_BUILD_TYPE "Debug")
+
+include_directories(
+    /usr/local/include
+)
+
+link_libraries(
+    /usr/local/lib
+)
+
 
 
 add_subdirectory(cache)
