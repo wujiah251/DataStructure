@@ -11,18 +11,19 @@
 template <typename T>
 class DoublyBuffer
 {
+private:
   class Wrapper
   {
     friend class DoublyBuffer;
 
   private:
-    static void destroy(*arg)
+    static void destroy(void *arg)
     {
-      delete static_cast<T *>(arg);
+      delete static_cast<Wrapper *>(arg);
     }
 
   public:
-    Wrapper(DoublyBuffer *c) _control(c) {}
+    Wrapper(DoublyBuffer *c) : _control(c) {}
     ~Wrapper()
     {
       if (_control != nullptr)
@@ -30,28 +31,40 @@ class DoublyBuffer
         _control->RemoveWrapper(this);
       }
     }
-    inline void BeginRead()
+    void BeginRead()
     {
       _mutex.lock();
     }
-    inline void EndRead()
+    void EndRead()
     {
       _mutex.unlock();
     }
-    inline void WaitReadDone()
+    void WaitReadDone()
     {
       // 获得锁再释放表示等待读者读完数据
-      std::lock_guard<std::mutex> guard(_mutex);
+      _mutex.lock();
+      _mutex.unlock();
     }
 
   private:
     DoublyBuffer *_control;
     std::mutex _mutex;
   };
+
+public:
   class ScopedPtr
   {
+    friend class DoublyBuffer;
+
   public:
     ScopedPtr() : _data(nullptr), _w(nullptr) {}
+    ~ScopedPtr()
+    {
+      if (_w)
+      {
+        _w->EndRead();
+      }
+    }
     const T *get() const { return _data; }
     const T &operator*() const { return *_data; }
     const T *operator->() const { return _data; }
@@ -60,7 +73,7 @@ class DoublyBuffer
     // 禁用复制构造函数和赋值函数
     ScopedPtr(const ScopedPtr &) = delete;
     ScopedPtr &operator=(const ScopedPtr &) = delete;
-    T *data;
+    const T *_data;
     Wrapper *_w;
   };
 
@@ -87,7 +100,7 @@ private:
   // 不安全读数据
   const T *UnsafeRead() const
   {
-    return _data + _index.load(memory_order_acquire);
+    return _data + _index.load(std::memory_order_acquire);
   }
   Wrapper *AddWrapper()
   {
@@ -133,10 +146,11 @@ DoublyBuffer<T>::DoublyBuffer()
       _wrapper_key(0)
 {
   _wrappers.reserve(64);
-  const int rc = pthread_key_create(&_wrapper_key, Wrapper::destroy);
+  const int rc = pthread_key_create(&_wrapper_key,
+                                    Wrapper::destroy);
   if (rc != 0)
   {
-    cout << "Fail to pthread_key_create" << endl;
+    std::cout << "Fail to pthread_key_create" << std::endl;
   }
   else
   {
@@ -151,10 +165,10 @@ DoublyBuffer<T>::~DoublyBuffer()
 {
   if (_created_key)
   {
-    pthread_key_create(_wrapper_key);
+    pthread_key_delete(_wrapper_key);
   }
   {
-    lock_guard<mutex> guard(_wrappers_mutex);
+    std::lock_guard<std::mutex> guard(_wrappers_mutex);
     // 等待所有读者读完
     for (size_t i = 0; i < _wrappers.size(); ++i)
     {
@@ -182,7 +196,7 @@ bool DoublyBuffer<T>::Read(ScopedPtr *ptr)
     return true;
   }
   w = AddWrapper();
-  if (w != NULL)
+  if (w != nullptr)
   {
     // 设置线程本地存储
     const int rc = pthread_setspecific(_wrapper_key, w);
@@ -221,7 +235,7 @@ bool DoublyBuffer<T>::Modify(Fn &fn)
     }
     const bool ret2 = fn(_data[bg_index]);
     if (!ret2)
-      cout << "ret2=false" << endl;
+      std::cout << "ret2=false" << std::endl;
     return ret2;
   }
 }
